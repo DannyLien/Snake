@@ -30,7 +30,9 @@ class MainActivity : AppCompatActivity() {
             binding.contentView.gameView.snakeBody = it
             binding.contentView.gameView.invalidate()
         })
-        viewModel.score.observe(this, Observer {})
+        viewModel.score.observe(this, Observer {
+            binding.contentView.score.setText(it.toString())
+        })
 
         viewModel.gameState.observe(this, { gameState ->
             if (gameState == GameState.GAME_OVER) {
@@ -42,7 +44,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.apple.observe(this, Observer {})
+        viewModel.apple.observe(this, Observer {
+            binding.contentView.gameView.apple=it
+            binding.contentView.gameView.invalidate()
+        })
 
         viewModel.start()
 

@@ -1,19 +1,23 @@
 package com.hank.snake
 
+import android.graphics.PostProcessor
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlin.concurrent.fixedRateTimer
+import kotlin.random.Random
 
 class SnakeViewModel : ViewModel() {
+    private lateinit var applePos: Position
     val body = MutableLiveData<List<Position>>()
     val apple = MutableLiveData<Position>()
     var score = MutableLiveData<Int>()
-
     val gameState = MutableLiveData<GameState>()
-
     private val snakeBody = mutableListOf<Position>()
     private var direction = Direction.LEFT
+    private var point: Int = 0
+
     fun start() {
+        score.postValue(point)
         snakeBody.apply {
             add(Position(10, 10))
             add(Position(11, 10))
@@ -22,6 +26,7 @@ class SnakeViewModel : ViewModel() {
         }.also {
             body.value = it
         }
+        generateApple()
         fixedRateTimer("timer", true, 500, 500) {
             val pos = snakeBody.first().copy().apply {
                 when (direction) {
@@ -30,16 +35,40 @@ class SnakeViewModel : ViewModel() {
                     Direction.TOP -> y--
                     Direction.DOWN -> y++
                 }
-                if (x < 0 || x >= 20 || y < 0 || y >= 20) {
+                if (snakeBody.contains(this) || x < 0 || x >= 20 || y < 0 || y >= 20) {
                     cancel()
                     gameState.postValue(GameState.GAME_OVER)
                 }
 
             }
             snakeBody.add(0, pos)
-            snakeBody.removeLast()
+            if (pos != applePos) {
+                snakeBody.removeLast()
+            } else {
+                point += 100
+                score.postValue(point)
+                generateApple()
+            }
             body.postValue(snakeBody)
         }
+    }
+
+    fun generateApple() {
+//        applePos = Position(
+//            Random.nextInt(20),
+//            Random.nextInt(20)
+//        )
+        val spots = mutableListOf<Position>().apply {
+            for (i in 0..19) {
+                for (j in 0..19) {
+                    add(Position(i, j))
+                }
+            }
+        }
+        spots.removeAll(snakeBody)
+        spots.shuffled()
+        applePos = spots[0]
+        apple.postValue(applePos)
     }
 
     fun reset() {}
