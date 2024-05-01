@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         binding.contentView.right.setOnClickListener { viewModel.move(Direction.RIGHT) }
 
         binding.fab.setOnClickListener { view ->
+
             viewModel.reset()
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show()

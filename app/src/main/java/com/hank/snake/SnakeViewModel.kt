@@ -66,14 +66,14 @@ class SnakeViewModel : ViewModel() {
             }
         }
         spots.removeAll(snakeBody)
-        spots.shuffled()
-        applePos = spots[0]
+//        spots.shuffled()
+        applePos = spots[Random.nextInt(400-snakeBody.size)]
         apple.postValue(applePos)
     }
 
     fun reset() {
-        point = 0
         snakeBody.clear()
+        point = 0
         start()
 
     }
