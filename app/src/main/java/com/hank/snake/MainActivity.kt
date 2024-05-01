@@ -9,6 +9,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.hank.snake.databinding.ActivityMainBinding
@@ -25,13 +26,23 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         val viewModel = ViewModelProvider(this).get(SnakeViewModel::class.java)
-        viewModel.body.observe(this, Observer{
+        viewModel.body.observe(this, Observer {
             binding.contentView.gameView.snakeBody = it
             binding.contentView.gameView.invalidate()
         })
-        viewModel.score.observe(this, Observer{})
+        viewModel.score.observe(this, Observer {})
 
-        viewModel.apple.observe(this, Observer{})
+        viewModel.gameState.observe(this, { gameState ->
+            if (gameState == GameState.GAME_OVER) {
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle("Game")
+                    .setMessage("Game Over")
+                    .setPositiveButton("OK", null)
+                    .show()
+            }
+        })
+
+        viewModel.apple.observe(this, Observer {})
 
         viewModel.start()
 
@@ -39,6 +50,12 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
+
+        binding.contentView.top.setOnClickListener { viewModel.move(Direction.TOP) }
+        binding.contentView.down.setOnClickListener { viewModel.move(Direction.DOWN) }
+        binding.contentView.left.setOnClickListener { viewModel.move(Direction.LEFT) }
+        binding.contentView.right.setOnClickListener { viewModel.move(Direction.RIGHT) }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
