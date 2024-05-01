@@ -26,10 +26,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         val viewModel = ViewModelProvider(this).get(SnakeViewModel::class.java)
+
         viewModel.body.observe(this, Observer {
             binding.contentView.gameView.snakeBody = it
             binding.contentView.gameView.invalidate()
         })
+
         viewModel.score.observe(this, Observer {
             binding.contentView.score.setText(it.toString())
         })
@@ -51,15 +53,16 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.start()
 
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
-
         binding.contentView.top.setOnClickListener { viewModel.move(Direction.TOP) }
         binding.contentView.down.setOnClickListener { viewModel.move(Direction.DOWN) }
         binding.contentView.left.setOnClickListener { viewModel.move(Direction.LEFT) }
         binding.contentView.right.setOnClickListener { viewModel.move(Direction.RIGHT) }
+
+        binding.fab.setOnClickListener { view ->
+            viewModel.reset()
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show()
+        }
 
     }
 

@@ -60,8 +60,8 @@ class SnakeViewModel : ViewModel() {
 //        )
         val spots = mutableListOf<Position>().apply {
             for (i in 0..19) {
-                for (j in 0..19) {
-                    add(Position(i, j))
+                for (j in 19 downTo 0 step 1) {
+                    add(Position(j, i))
                 }
             }
         }
@@ -71,7 +71,13 @@ class SnakeViewModel : ViewModel() {
         apple.postValue(applePos)
     }
 
-    fun reset() {}
+    fun reset() {
+        point = 0
+        snakeBody.clear()
+        start()
+
+    }
+
     fun move(dir: Direction) {
         direction = dir
     }
