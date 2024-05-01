@@ -26,11 +26,14 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel = ViewModelProvider(this).get(SnakeViewModel::class.java)
         viewModel.body.observe(this, Observer{
-
+            binding.contentView.gameView.snakeBody = it
+            binding.contentView.gameView.invalidate()
         })
         viewModel.score.observe(this, Observer{})
 
         viewModel.apple.observe(this, Observer{})
+
+        viewModel.start()
 
         binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
