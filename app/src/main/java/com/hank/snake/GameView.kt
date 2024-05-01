@@ -12,14 +12,15 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     var snakeBody: List<Position>? = null
     var size = 0
     val paint = Paint().apply { color = Color.BLACK }
+    val gap =3
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         canvas?.run {
             snakeBody?.forEach {
                 drawRect(
-                    (it.x * size).toFloat(), (it.y * size).toFloat(),
-                    ((it.x + 1) * size).toFloat(), ((it.y + 1) * size).toFloat(), paint
+                    (it.x * size).toFloat()+gap, (it.y * size).toFloat()+gap,
+                    ((it.x + 1) * size).toFloat()-gap, ((it.y + 1) * size).toFloat()-gap, paint
                 )
 
             }
